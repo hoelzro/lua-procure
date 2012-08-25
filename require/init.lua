@@ -13,12 +13,10 @@ local function require(name)
         local result = chunk(name)
         found        = true
 
-        if result == nil then
-          result = true
-        end
-
-        if package.loaded[name] == nil then
+        if result ~= nil then
           package.loaded[name] = result
+        elseif package.loaded[name] == nil then
+          package.loaded[name] = true
         end
 
         break
