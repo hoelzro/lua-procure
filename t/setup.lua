@@ -47,4 +47,31 @@ function test.is_tablelike(value, name)
   return result
 end
 
+function test.cmp_sets(got, expected, name)
+  local ok = true
+
+  for k, got_v in pairs(got) do
+    local expected_v = expected[k]
+
+    if got_v ~= expected_v then
+      ok = false
+      break
+    end
+  end
+
+  if ok then
+    for k, expected_v in pairs(expected) do
+      local got_v = got[k]
+
+      if got_v ~= expected_v then
+        ok = false
+        break
+      end
+    end
+  end
+
+  tb:ok(ok, name)
+  return ok
+end
+
 return test
