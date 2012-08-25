@@ -1,6 +1,8 @@
 local meta = {}
 local _M   = setmetatable({}, meta)
 
+_M.VERSION = '0.01'
+
 local function require(name)
   if package.loaded[name] == nil then
     local errors = { string.format("module '%s' not found", name) }
