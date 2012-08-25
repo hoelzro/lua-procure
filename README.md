@@ -2,7 +2,10 @@ lua-require - A Pure Lua Implementation of require()
 ====================================================
 
 *NOTE*: I intend to change this name very soon; I wanted to get some code down
-first, so I haven't had to chance to think of a good one.  Suggestions welcome!
+first, so I haven't had to chance to think of a good one.  Suggestions are welcome!
+Please keep in mind that as a result, I will rename the repository on Github once
+I've settled on a good name.  So if you're tracking my progress, don't be alarmed if
+it disappears. =)
 
 This library is a pure Lua implementation of `require()`.  It exists as a reference
 for people experienced in Lua but not C and would like a code-based way of looking
