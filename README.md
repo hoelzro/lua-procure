@@ -15,3 +15,23 @@ to deliver more advanced features on top of the basic `require()` functionality.
 For more information, see this thread on the Lua mailing list:
 
 http://lua-users.org/lists/lua-l/2012-08/msg00207.html
+
+Usage
+=====
+
+If you want to try this library out, all you need to do is this:
+
+```lua
+
+local require = require 'require'
+
+```
+
+And `require()` statements in the current chunk will use the pure Lua variant.
+If you're feeling dangerous, you could always override the global one:
+
+```lua
+
+_G.require = require 'require'
+
+```
