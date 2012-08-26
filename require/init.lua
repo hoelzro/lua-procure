@@ -8,7 +8,7 @@ local function require(name)
     local errors = { string.format("module '%s' not found", name) }
     local found
 
-    for _, loader in ipairs(package.loaders) do
+    for _, loader in ipairs(_M.loaders) do
       local chunk = loader(name)
 
       if type(chunk) == 'function' then
@@ -34,6 +34,29 @@ local function require(name)
   end
 
   return package.loaded[name]
+end
+
+_M.loaders = {}
+
+local loader_names = {
+  'preload_loader',
+  'lua_loader',
+  'c_loader',
+  'all_in_one_loader',
+}
+
+local loadermeta = {}
+
+function loadermeta:__call(...)
+  return self.impl(...)
+end
+
+local function makeloader(loader_func, name)
+  return setmetatable({ impl = loader_func, name = name }, loadermeta)
+end
+
+for i, loader in ipairs(package.loaders) do
+  _M.loaders[i] = makeloader(loader, loader_names[i])
 end
 
 function meta:__call(name)
