@@ -119,12 +119,14 @@ local function makeloader(loader_func, name)
   return setmetatable({ impl = loader_func, name = name }, loadermeta)
 end
 
+-- XXX make sure that any added loaders are preserved (esp. luarocks)
 _M.loaders = {
   makeloader(preload_loader, 'preload'),
   makeloader(lua_loader, 'lua'),
   makeloader(c_loader, 'c'),
   makeloader(all_in_one_loader, 'all_in_one'),
 }
+-- XXX sugar for adding/removing loaders
 
 function meta:__call(name)
   return require(name)
