@@ -11,7 +11,7 @@ end
 
 local td      = test.tempdir()
 package.path  = td .. '/?.lua'
-package.cpath = 't_c/?.so' -- XXX hardcoded dynamic library extension
+package.cpath = 't_c/?' .. DYNLIB_EXT
 
 test.unslurp(td .. '/test-lua.lua', [[
 local name = ...

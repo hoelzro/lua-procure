@@ -15,6 +15,16 @@ setmetatable(test, nil)
 package.path = package.path .. ';./?/init.lua'
 LIB_NAME     = 'require'
 
+local os_name = os.getenv 'OS'
+
+if os_name == 'Linux' then
+  DYNLIB_EXT = '.so'
+elseif os_name == 'Darwin' then
+  DYNLIB_EXT = '.dylib'
+else
+  test.diag(os_name)
+end
+
 function test.is_callable(value, name)
   local type = type(value)
   local result

@@ -3,7 +3,7 @@
 local test    = require 't.setup'
 local require = require(LIB_NAME)
 
-package.cpath = 't_c/?.so' -- XXX hardcoded dynamic library extension
+package.cpath = 't_c/?' .. DYNLIB_EXT
 
 test.plan(17)
 
