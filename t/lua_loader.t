@@ -163,3 +163,5 @@ do -- check assign_loaded_return results
 
   test.is(result, package.loaded.assign_loaded_return)
 end
+
+-- XXX try a module with dots in the name!
