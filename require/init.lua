@@ -17,13 +17,15 @@ local function preload_loader(name)
   if package.preload[name] then
     return package.preload[name]
   else
-    return sformat("no field package.preload['%q']\n", name)
+    return sformat("no field package.preload['%s']\n", name)
   end
 end
 
 local function path_loader(name, paths, loader_func)
   local errors = {}
   local loader
+
+  name = sgsub(name, '%.', '/')
 
   for path in sgmatch(paths, '[^;]+') do
     path = sgsub(path, '%?', name)
@@ -37,14 +39,14 @@ local function path_loader(name, paths, loader_func)
     else
       -- XXX error for when file isn't readable?
       -- XXX error for when file isn't valid Lua (or loadable?)
-      tinsert(errors, sformat("no file '%q'", path))
+      tinsert(errors, sformat("no file '%s'", path))
     end
   end
 
   if loader then
     return loader
   else
-    return tconcat(errors, '\n')
+    return tconcat(errors, '\n') .. '\n'
   end
 end
 
@@ -78,7 +80,7 @@ end
 
 local function require(name)
   if package.loaded[name] == nil then
-    local errors = { string.format("module '%s' not found", name) }
+    local errors = { string.format("module '%s' not found\n", name) }
     local found
 
     for _, loader in ipairs(_M.loaders) do
