@@ -1,6 +1,7 @@
 pcall(require, 'luarocks.require')
 
-local _G = getfenv(0)
+local _G  = getfenv(0)
+local lfs = require 'lfs'
 
 -- Load Test.More into an isolated environment
 local test = setmetatable({}, { __index = _G })
@@ -72,6 +73,77 @@ function test.cmp_sets(got, expected, name)
 
   tb:ok(ok, name)
   return ok
+end
+
+local function find(root, action)
+  local ok, errormsg = pcall(function()
+    for entry in lfs.dir(root) do
+      if entry ~= '.' and entry ~= '..' then
+        entry = root .. '/' .. entry -- XXX Be sensitive to non-unixes
+        local type = lfs.attributes(entry).mode
+
+        if type == 'directory' then
+          find(entry, action)
+        else
+          action(entry)
+        end
+      end
+    end
+
+    action(root)
+  end)
+
+  if not ok then
+    io.stderr:write(errormsg .. '\n')
+  end
+end
+
+function test.tempdir()
+  local tempdir = newproxy(true)
+  local meta    = getmetatable(tempdir)
+  local filename
+
+  while not filename do
+    local name = os.tmpname()
+    os.remove(name)
+    local success = lfs.mkdir(name)
+
+    if success then
+      filename = name
+    end
+  end
+
+  function meta:__gc()
+    find(filename, function(path)
+      os.remove(path)
+    end)
+  end
+
+  function meta:__tostring()
+    return filename
+  end
+
+  function meta.__concat(lhs, rhs)
+    if type(lhs) ~= 'string' then
+      lhs = tostring(lhs)
+    end
+
+    if type(rhs) ~= 'string' then
+      rhs = tostring(rhs)
+    end
+
+    return lhs .. rhs
+  end
+
+  return tempdir
+end
+
+function test.unslurp(filename, contents)
+  local h = assert(io.open(filename, 'w'))
+
+  h:write(contents)
+
+  h:close()
 end
 
 return test

@@ -2,104 +2,32 @@
 
 local test    = require 't.setup'
 local require = require(LIB_NAME)
-local lfs     = require 'lfs'
 
-local function find(root, action)
-  local ok, errormsg = pcall(function()
-    for entry in lfs.dir(root) do
-      if entry ~= '.' and entry ~= '..' then
-        entry = root .. '/' .. entry -- XXX Be sensitive to non-unixes
-        local type = lfs.attributes(entry).mode
-
-        if type == 'directory' then
-          find(entry, action)
-        else
-          action(entry)
-        end
-      end
-    end
-
-    action(root)
-  end)
-
-  if not ok then
-    io.stderr:write(errormsg .. '\n')
-  end
-end
-
-local function tempdir()
-  local tempdir = newproxy(true)
-  local meta    = getmetatable(tempdir)
-  local filename
-
-  while not filename do
-    local name = os.tmpname()
-    os.remove(name)
-    local success = lfs.mkdir(name)
-
-    if success then
-      filename = name
-    end
-  end
-
-  function meta:__gc()
-    find(filename, function(path)
-      os.remove(path)
-    end)
-  end
-
-  function meta:__tostring()
-    return filename
-  end
-
-  function meta.__concat(lhs, rhs)
-    if type(lhs) ~= 'string' then
-      lhs = tostring(lhs)
-    end
-
-    if type(rhs) ~= 'string' then
-      rhs = tostring(rhs)
-    end
-
-    return lhs .. rhs
-  end
-
-  return tempdir
-end
-
-local function unslurp(filename, contents)
-  local h = assert(io.open(filename, 'w'))
-
-  h:write(contents)
-
-  h:close()
-end
-
-local td     = tempdir()
+local td     = test.tempdir()
 package.path = td .. '/?.lua'
 
-unslurp(td .. '/table_return.lua', [[
+test.unslurp(td .. '/table_return.lua', [[
 return { foo = 17 }
 ]])
 
-unslurp(td .. '/no_return.lua', [[
+test.unslurp(td .. '/no_return.lua', [[
 _G.bar = 17
 ]])
 
-unslurp(td .. '/nil_return.lua', [[
+test.unslurp(td .. '/nil_return.lua', [[
 return nil
 ]])
 
-unslurp(td .. '/false_return.lua', [[
+test.unslurp(td .. '/false_return.lua', [[
 return false
 ]])
 
-unslurp(td .. '/assign_loaded_noreturn.lua', [[
+test.unslurp(td .. '/assign_loaded_noreturn.lua', [[
 local name = ...
 package.loaded[name] = { foo = 17 }
 ]])
 
-unslurp(td .. '/assign_loaded_return.lua', [[
+test.unslurp(td .. '/assign_loaded_return.lua', [[
 local name = ...
 package.loaded[name] = { foo = 17 }
 
