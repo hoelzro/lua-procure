@@ -3,7 +3,7 @@
 local test    = require 't.setup'
 local require = require(LIB_NAME)
 
-test.plan(2)
+test.plan(3)
 
 package.preload.foo = {
   bar = function()
@@ -22,5 +22,9 @@ end
 local result = require 'foo.bar'
 
 test.cmp_sets(result, {
+    foo = 17,
+})
+
+test.cmp_sets(package.loaded['foo.bar'], {
     foo = 17,
 })
