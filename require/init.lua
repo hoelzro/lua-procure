@@ -128,6 +128,13 @@ _M.loaders = {
   makeloader(c_loader, 'c'),
   makeloader(all_in_one_loader, 'all_in_one'),
 }
+
+if package.loaded['luarocks.require'] then
+  local luarocks_loader = require('luarocks.require').luarocks_loader
+
+  table.insert(_M.loaders, 1, makeloader(luarocks_loader, 'luarocks')) 
+end
+
 -- XXX sugar for adding/removing loaders
 
 function meta:__call(name)
