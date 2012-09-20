@@ -53,5 +53,5 @@ This is to allow users who want to keep a clean global environment to use module
 
 It's not *entirely* impossible for isolated modules to alter the global environment; while
 naïve global assignment (assigning to a variable not declared with `local`) and assigning
-to `\_G` will be intercepted, assigning to keys in the value returned by `getfenv(0)` (for
+to `_G` will be intercepted, assigning to keys in the value returned by `getfenv(0)` (for
 example) will not.  I feel this is a proper balance between cleanliness and flexibility.
