@@ -3,12 +3,10 @@
 local test    = require 't.setup'
 local require = require(LIB_NAME)
 
-local EXT = 'so' -- XXX hardcoded extension
-
 test.plan(6)
 
 package.path  = 't_c/?.lua'
-package.cpath = 't_c/?.' .. EXT
+package.cpath = 't_c/?' .. DYNLIB_EXT
 
 do -- absent module
   local ok, message = pcall(require, 'absent.module')
@@ -17,8 +15,6 @@ do -- absent module
   test.like(message, "module 'absent.module' not found")
   test.like(message, "no field package%.preload%['absent%.module'%]")
   test.like(message, "no file 't_c/absent/module%.lua'")
-  test.like(message, "no file 't_c/absent/module%." .. EXT .. "'")
-  test.like(message, "no file 't_c/absent%." .. EXT .. "'")
+  test.like(message, "no file 't_c/absent/module%" .. DYNLIB_EXT .. "'")
+  test.like(message, "no file 't_c/absent%" .. DYNLIB_EXT .. "'")
 end
-
-test.done_testing()
