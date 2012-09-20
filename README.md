@@ -43,3 +43,15 @@ If no library is found with the name `name`, `nil` and an error message are retu
 An example usage for this would be to load plugins for a program; you want to use
 require's loaders to find a plugin, but you want to be able to run them in a custom
 environment.
+
+### procure.isolated(name)
+
+This function behaves exactly like `procure()`, except the module specified by `name`
+is loaded in an isolated environment (it cannot make changes to the global environment).
+This is to allow users who want to keep a clean global environment to use modules that
+"misbehave" in this regard.
+
+It's not *entirely* impossible for isolated modules to alter the global environment; while
+naïve global assignment (assigning to a variable not declared with `local`) and assigning
+to `\_G` will be intercepted, assigning to keys in the value returned by `getfenv(0)` (for
+example) will not.  I feel this is a proper balance between cleanliness and flexibility.
