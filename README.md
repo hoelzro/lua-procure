@@ -1,4 +1,4 @@
-lua-require - A Pure Lua Implementation of require()
+lua-procure - A Pure Lua Implementation of require()
 ====================================================
 
 **NOTE**: I intend to change this name very soon; I wanted to get some code down
@@ -23,7 +23,7 @@ If you want to try this library out, all you need to do is this:
 
 ```lua
 
-local require = require 'require'
+local require = require 'procure'
 
 ```
 
@@ -32,7 +32,7 @@ If you're feeling dangerous, you could always override the global one:
 
 ```lua
 
-_G.require = require 'require'
+_G.require = require 'procure'
 
 ```
 
@@ -42,7 +42,7 @@ Additional Methods/Functions
 In addition to the `require()` functionality that this library supports, it also
 supports other methods and functions related to loading libraries.
 
-### require.findchunk(name)
+### procure.findchunk(name)
 
 This function finds the code chunk that require itself would load and returns it.
 If no library is found with the name `name`, `nil` and an error message are returned.

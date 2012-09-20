@@ -13,7 +13,7 @@ setfenv(0, _G)
 setmetatable(test, nil)
 
 package.path = package.path .. ';./?/init.lua'
-LIB_NAME     = 'require'
+LIB_NAME     = 'procure'
 
 local os_name = os.getenv 'OS'
 
