@@ -111,6 +111,8 @@ end
 
 -- XXX what happens if I procure.isolated() a module that
 --     already behaves well with regards to the global env?
+-- XXX what happens if I alter globals *and* return a value from the chunk?
+-- XXX same deal, but assign to package.loaded
 
 -- XXX consider this:
 --
