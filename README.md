@@ -35,3 +35,17 @@ If you're feeling dangerous, you could always override the global one:
 _G.require = require 'require'
 
 ```
+
+Additional Methods/Functions
+============================
+
+In addition to the `require()` functionality that this library supports, it also
+supports other methods and functions related to loading libraries.
+
+### require.findchunk(name)
+
+This function finds the code chunk that require itself would load and returns it.
+If no library is found with the name `name`, `nil` and an error message are returned.
+An example usage for this would be to load plugins for a program; you want to use
+require's loaders to find a plugin, but you want to be able to run them in a custom
+environment.
