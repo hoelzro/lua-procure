@@ -78,33 +78,37 @@ local function all_in_one_loader(name)
   end)
 end
 
+local function findchunk(name)
+  local errors = { string.format("module '%s' not found\n", name) }
+  local found
+
+  for _, loader in ipairs(_M.loaders) do
+    local chunk = loader(name)
+
+    if type(chunk) == 'function' then
+      return chunk
+    elseif type(chunk) == 'string' then
+      errors[#errors + 1] = chunk
+    end
+  end
+
+  return nil, table.concat(errors, '')
+end
+
 local function require(name)
   if package.loaded[name] == nil then
-    local errors = { string.format("module '%s' not found\n", name) }
-    local found
+    local chunk, errors = findchunk(name)
 
-    for _, loader in ipairs(_M.loaders) do
-      local chunk = loader(name)
-
-      if type(chunk) == 'function' then
-        local result = chunk(name)
-        found        = true
-
-        if result ~= nil then
-          package.loaded[name] = result
-        elseif package.loaded[name] == nil then
-          package.loaded[name] = true
-        end
-
-        break
-      elseif type(chunk) == 'string' then
-        errors[#errors + 1] = chunk
-      end
+    if not chunk then
+      error(errors, 2)
     end
 
-    if not found then
-      errors = table.concat(errors, '')
-      error(errors, 2)
+    local result = chunk(name)
+
+    if result ~= nil then
+      package.loaded[name] = result
+    elseif package.loaded[name] == nil then
+      package.loaded[name] = true
     end
   end
 
@@ -140,5 +144,7 @@ end
 function meta:__call(name)
   return require(name)
 end
+
+_M.findchunk = findchunk
 
 return _M
