@@ -109,6 +109,9 @@ do
   }
 end
 
+-- XXX what happens if I procure.isolated() a module that
+--     already behaves well with regards to the global env?
+
 -- XXX consider this:
 --
 --     function package.preload.mymod()
