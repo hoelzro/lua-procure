@@ -1,0 +1,72 @@
+#!/bin/bash
+
+show_help() {
+    cat <<END_HELP
+Usage: $0 [options]
+
+Options:
+
+  --help              Display this help message.
+  --lua [path-to-lua] Specify the Lua executable to use for testing and
+                      installation.  Defaults to \$(which lua).
+END_HELP
+}
+
+determine_lua_version() {
+    "$lua" -e 'if _VERSION ~= nil then local version = string.gsub(_VERSION, "^%D+", "") print(version) end'
+}
+
+create_makefile() {
+    cat <<END_MAKEFILE >| Makefile
+TEST_EXT_DIR=t_c
+
+OS=\$(shell uname)
+export OS
+
+test: test_extensions
+	LUA_INIT='' prove --exec="$lua" t
+
+test_extensions:
+	make -C \$(TEST_EXT_DIR)
+
+clean:
+	make -C \$(TEST_EXT_DIR) clean
+END_MAKEFILE
+}
+
+lua=lua
+
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        --help)
+            show_help
+            exit 0
+            ;;
+        --lua)
+            lua=$2
+            shift
+            ;;
+        *)
+            echo "Unrecognized option '$option'"
+            show_help
+            exit 1
+            ;;
+    esac
+
+    shift
+done
+
+lua_version=$(determine_lua_version)
+
+# if we can't figure it out, it's probably < 5.1
+if [[ -z "$lua_version" ]]; then
+    echo "Lua versions other than 5.1 are not yet suppported"
+    exit 1
+fi
+
+if [[ "$lua_version" != '5.1' ]]; then
+    echo "Lua versions other than 5.1 are not yet suppported"
+    exit 1
+fi
+
+create_makefile
