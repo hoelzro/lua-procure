@@ -60,12 +60,12 @@ lua_version=$(determine_lua_version)
 
 # if we can't figure it out, it's probably < 5.1
 if [[ -z "$lua_version" ]]; then
-    echo "Lua versions other than 5.1 are not yet suppported"
+    echo "Lua versions other than 5.1 are not yet suppported; you can use the --lua option to specify an alternative Lua"
     exit 1
 fi
 
 if [[ "$lua_version" != '5.1' ]]; then
-    echo "Lua versions other than 5.1 are not yet suppported"
+    echo "Lua versions other than 5.1 are not yet suppported; you can use the --lua option to specify an alternative Lua"
     exit 1
 fi
 
