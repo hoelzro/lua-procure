@@ -1,5 +1,11 @@
 #!/bin/bash
 
+unset LUA_INIT
+unset LUA_PATH
+unset LUA_PATH_5_2
+unset LUA_CPATH
+unset LUA_CPATH_5_2
+
 show_help() {
     cat <<END_HELP
 Usage: $0 [options]
